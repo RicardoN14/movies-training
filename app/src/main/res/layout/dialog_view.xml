@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dialogRootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone"
+    tools:visibility="visible">
+
+    <FrameLayout
+        style="@style/DialogCardStyle"
+        android:background="@drawable/white_rectangle_with_rounded_borders"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
+
+            <RelativeLayout
+                style="@style/DialogCardViewChildStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Title -->
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/dialogTitle"
+                    style="@style/LabelStyle"
+                    android:textSize="19sp"
+                    tools:text="Dialog Title" />
+
+                <!-- Message -->
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/dialogMessage"
+                    style="@style/LabelStyle"
+                    android:layout_below="@+id/dialogTitle"
+                    android:paddingTop="16dp"
+                    android:textSize="17sp"
+                    tools:text="Dialog Message that can be very long with more than one line" />
+
+                <!-- Custom View Container -->
+                <FrameLayout
+                    android:id="@+id/dialogCustomViewContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/dialogMessage"
+                    android:layout_marginTop="24dp"
+                    android:paddingBottom="16dp"
+                    android:visibility="gone" />
+
+                <!-- Negative Button -->
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/dialogNegativeButton"
+                    style="@style/DialogButtonStyle"
+                    android:layout_below="@+id/dialogCustomViewContainer"
+                    android:layout_marginStart="-24dp"
+                    android:paddingEnd="24dp"
+                    android:paddingStart="24dp"
+                    tools:text="Cancel" />
+
+                <!-- Positive Button -->
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/dialogPositiveButton"
+                    style="@style/DialogButtonStyle"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignTop="@+id/dialogNegativeButton"
+                    android:layout_below="@+id/dialogCustomViewContainer"
+                    android:layout_marginEnd="-24dp"
+                    android:paddingEnd="24dp"
+                    android:paddingStart="24dp"
+                    tools:text="Save" />
+
+            </RelativeLayout>
+
+        </ScrollView>
+
+    </FrameLayout>
+
+</RelativeLayout>

@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">MoviesTraining</string>
+    <string name="error_state_retry_button">Retry</string>
+    <string name="error_dialog_ok">OK</string>
+    <string name="error_dialog_title">Error</string>
+    <string name="error_timeout_message">Timeout Error</string>
+    <string name="error_internet_connection_message">Internet Connection Not Found</string>
+    <string name="error_ssl_connection_message">Unable to establish secure connection to the server.</string>
+    <string name="error_parse_message">Error Getting Data From Server</string>
+    <string name="error_server_message">Server Error</string>
+    <string name="splash_screen_is_first_launch">Is first launch</string>
+
+    <string name="main_screen_menu_search">Search</string>
+    <string name="main_screen_menu_search_options">More Options</string>
+
+
+</resources>

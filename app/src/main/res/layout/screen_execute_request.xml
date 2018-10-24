@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/screenExecuteRequestRootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--######## Layout inflated programmatically as first child #######-->
+
+    <!-- Error View -->
+    <pt.inm.movies.views.ErrorStateView
+        android:id="@+id/screenExecuteRequestErrorStateView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <!-- Loader -->
+    <include layout="@layout/loader" />
+
+</RelativeLayout>

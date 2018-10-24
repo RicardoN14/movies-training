@@ -1,0 +1,194 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'io.fabric'
+
+def gitVersion = 1 //('git rev-list HEAD --count'.toString().execute().text.trim().toInteger())
+def appStoreVersion = '1.0.0'
+
+def appVersion = appStoreVersion + "." + gitVersion
+def appName = "MoviesTrainning"
+
+/** Generate Build Script - Start **/
+
+def createJsonFile(appName, variant, versionName, versionCode) {
+
+    def jFile = String.format("{\"title\":\"%s-%s-%s\",\"versionCode\":%s,\"versionName\":\"%s\"}",
+            appName, variant.flavorName.toUpperCase(), versionName, versionCode, versionName)
+
+    File jsonFile = new File(String.format("%s/outputs/apk/%s/%s/info.json",
+            project.buildDir, variant.applicationId, versionCode))
+
+    try {
+        jsonFile.write(jFile)
+    } catch (Exception e) {
+        println "write exception: $e"
+    }
+}
+
+def appendVersionNameVersionCode(appName, variant, defaultConfig) {
+
+    variant.outputs.all { output ->
+
+        def flavor = variant.mergedFlavor
+
+        def versionName = flavor.getVersionName()
+
+        output.outputFileName = String.format("%s-%s-%s.apk",
+                appName, variant.flavorName.toUpperCase(), versionName)
+    }
+
+    variant.assemble.doLast{ assemble ->
+
+        def flavor = variant.mergedFlavor
+        def versionCode = flavor.getVersionCode()
+        def newFilePath = String.format("%s/outputs/apk/%s/%s",
+                project.buildDir, variant.applicationId, versionCode)
+
+        copy {
+            from variant.outputs*.outputFile
+            into newFilePath
+        }
+
+        println "variant.outputs*.outputFile = " + variant.outputs*.outputFile
+        println "newFilePath = " + newFilePath
+
+        def versionName = defaultConfig.versionName
+
+        createJsonFile(appName, variant, versionName, versionCode)
+    }
+
+}
+
+/** Generate Build Script - End **/
+
+kapt {
+	generateStubs = true
+}
+
+
+androidExtensions {
+	experimental = true
+}
+
+
+android {
+    compileSdkVersion 28
+    flavorDimensions "default"
+
+    signingConfigs {
+        release {
+            keyAlias 'inm'
+            keyPassword 'InnovMakers2010'
+            storeFile file('keystore/inm_keystore')
+            storePassword 'InnovMakers2010'
+        }
+    }
+
+    defaultConfig {
+        applicationId "pt.inm.movies"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode gitVersion
+        versionName appVersion
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            applicationVariants.all { variant ->
+                appendVersionNameVersionCode(appName, variant, defaultConfig)
+            }
+        }
+    }
+
+	productFlavors {
+		"mock" {
+		    dimension "default"
+			applicationId "pt.inm.movies.mock"
+			signingConfig signingConfigs.release
+			buildConfigField "boolean", "CHECK_FOR_UPDATES", "false"
+		}
+
+		"dev" {
+			dimension "default"
+			applicationId "pt.inm.movies.dev"
+			signingConfig signingConfigs.release
+			buildConfigField "boolean", "CHECK_FOR_UPDATES", "true"
+		}
+
+		 "qua" {
+			dimension "default"
+			applicationId "pt.inm.movies.qua"
+			signingConfig signingConfigs.release
+			buildConfigField "boolean", "CHECK_FOR_UPDATES", "true"
+		}
+	}
+
+    applicationVariants.all { theVariant ->
+
+        def flavor = theVariant.mergedFlavor
+
+        def versionCode = flavor.getVersionCode()
+        def versionName = flavor.getVersionName()
+
+        String variantName = String.format("%s%s", theVariant.name.charAt(0).toUpperCase(), theVariant.name.substring(1))
+
+        def name = theVariant.name
+
+        //noinspection GroovyAssignabilityCheck
+        task "$name-CreateJsonFile"(dependsOn: String.format("assemble%s", variantName)) << {
+            createJsonFile(appName, theVariant, versionName, versionCode)
+        }
+    }
+}
+
+dependencies {
+	implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+	// Support Libraries Dependencies
+	implementation 'androidx.appcompat:appcompat:1.0.0'
+	implementation 'com.google.android.material:material:1.0.0'
+	implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+	implementation 'androidx.recyclerview:recyclerview:1.0.0'
+	
+	// Kotlin Dependencies
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+	
+	// Dependency Injector (Dagger 2)
+    implementation "com.google.dagger:dagger:2.12"
+    kapt "com.google.dagger:dagger-compiler:2.12"
+	
+	// Anko
+    implementation "org.jetbrains.anko:anko-common:$ankoVersion"
+	
+	// Android KTX
+    implementation "androidx.core:core-ktx:1.0.0"
+    implementation "androidx.fragment:fragment-ktx:1.0.0"
+	
+	// Hockey Kit
+	implementation "inm:lib-inm-hockeykit:1.0.8@aar"
+
+    //Fabric - Crashlytics
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+        transitive = true
+    }
+	
+	androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+	
+	// WebRequests
+	implementation "inm:lib-webrequests:3.4.0@aar"
+	implementation "inm:lib-volleyplus:2.1.4@aar"
+
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.0.0"
+    kapt "androidx.lifecycle:lifecycle-compiler:2.0.0"
+
+}
+
+
+    

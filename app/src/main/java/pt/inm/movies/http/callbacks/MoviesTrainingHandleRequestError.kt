@@ -7,6 +7,7 @@ import pt.inm.movies.http.entities.responses.HeaderResponseData
 import pt.inm.movies.http.interfaces.IMoviesTrainingWebRequestContext
 import pt.inm.webrequests.callbacks.HandleRequestError
 import pt.inm.webrequests.callbacks.ResponseError
+import pt.inm.webrequests.exceptions.WebRequestsParseException
 import pt.inm.webrequests.utils.DLog
 import javax.net.ssl.SSLException
 
@@ -49,8 +50,7 @@ class MoviesTrainingHandleRequestError : HandleRequestError<IMoviesTrainingWebRe
         webRequestContext.showError(webRequest.requestConfig, requestError)
     }
 
-    override fun onParseError(webRequestContext: IMoviesTrainingWebRequestContext,
-                              webRequest: MoviesTrainingWebRequest, ex: Exception) {
+    override fun onParseError(webRequestContext: IMoviesTrainingWebRequestContext, webRequest: MoviesTrainingWebRequest, ex: WebRequestsParseException?) {
         super.onParseError(webRequestContext, webRequest, ex)
         DLog.e(TAG, "onParseError() exception = $ex")
         val requestError = RequestError(RequestErrorType.PARSE_ERROR)

@@ -32,10 +32,9 @@
         <activity android:name=".ui.screens.NowPlayingMoviesScreen" />
         <activity android:name=".ui.screens.MainScreen" />
 
-        <!-- Fabric with INM API key-->
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="5638f881b12a3e2abd52f9a0beee8255fb37174e" />
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false"/>
 
     </application>
 
